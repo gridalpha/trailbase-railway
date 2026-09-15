@@ -141,6 +141,7 @@ seed_admin() {
       return 0
     fi
     log "no admin user in this depot; creating $email"
+    # `user add` creates the account already verified.
     run_as /app/trail --depot "$DEPOT" user add "$email" "$ADMIN_PASSWORD" \
       || log "user add failed (account already present?)"
     if run_as /app/trail --depot "$DEPOT" admin promote "$email"; then
@@ -179,7 +180,6 @@ seed_admin() {
     return 0
   fi
 
-  run_as /app/trail --depot "$DEPOT" user verify "$email" || true
   printf '%s' "$stamp" > "$marker"
   chown "$APP_USER:$APP_USER" "$marker"
   log "applied ADMIN_EMAIL/ADMIN_PASSWORD to the admin account"
